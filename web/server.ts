@@ -629,6 +629,10 @@ app.get('/api/piped/search', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`[Server] DotPlayer API server running on http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`[Server] DotPlayer API server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;

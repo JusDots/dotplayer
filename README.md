@@ -26,37 +26,39 @@ Runs:
 ## Production Hosting (No local dev needed)
 
 Recommended setup:
-- Frontend: **GitHub Pages**
-- Backend API (`web/server.ts`): **Firebase Functions**
+- Frontend: **Firebase Hosting**
+- Backend API (`web/server.ts`): **Vercel**
 
-### 1) Deploy backend API on Firebase Functions
+### 1) Deploy backend API on Vercel
 
 ```bash
-npm i -g firebase-tools
-firebase login
-cd functions
+cd web
+npm i -g vercel
 npm install
-cd ..
-firebase deploy --only functions
+vercel --prod
 ```
 
-Copy function URL from output:
-- `https://<region>-<project>.cloudfunctions.net/api`
+Copy backend URL from output, for example:
+- `https://dotplayer-api.vercel.app`
 
-### 2) Set frontend API URL for Pages
+### 2) Build frontend with backend URL
 
-In GitHub repo settings:
-- `Settings -> Secrets and variables -> Actions -> Variables`
-- Add variable:
-  - `VITE_API_BASE_URL` = your Firebase function URL (value can end in `/api`)
+```bash
+cd web
+# PowerShell:
+$env:VITE_API_BASE_URL="https://dotplayer-api.vercel.app"
+npm run build
+cd ..
+```
 
-### 3) Enable GitHub Pages
+### 3) Deploy frontend on Firebase Hosting
 
-- `Settings -> Pages`
-- Source: **GitHub Actions**
-- Workflow `Deploy Web To GitHub Pages` will auto-deploy on push.
-- Site URL will be:
-  - `https://jusdots.github.io/dotplayer/`
+```bash
+firebase deploy --only hosting
+```
+
+Site URL will be:
+- `https://dotplayer-api.web.app` (or your project hosting URL)
 
 ## Discord Rich Presence (Optional)
 
