@@ -336,7 +336,11 @@ export const getStreamUrl = async (videoId: string): Promise<{ url: string; mime
     const err = await res.json().catch(() => ({ error: 'Unknown error' }));
     throw new Error(err.error || `Server returned ${res.status}`);
   }
-  return res.json();
+  const data = await res.json();
+  if (data.url && data.url.startsWith('/')) {
+    data.url = apiUrl(data.url);
+  }
+  return data;
 };
 
 export const search = async (query: string) => {
