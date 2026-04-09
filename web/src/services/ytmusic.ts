@@ -2,6 +2,12 @@ import { Innertube } from 'youtubei.js';
 import { apiUrl } from '../config';
 
 let yt: Innertube | null = null;
+const CLIENT_PIPED_APIS = [
+  'https://pipedapi.kavin.rocks',
+  'https://pipedapi-libre.kavin.rocks',
+  'https://pipedapi.leptons.xyz',
+  'https://pipedapi.nosebs.ru',
+];
 
 export const getYTInstance = async (credentials?: any) => {
   if (!yt || credentials) {
@@ -259,6 +265,28 @@ export const getStreamUrl = async (videoId: string): Promise<{ url: string; mime
     }
   } catch(e) {
      console.warn("[YTMusic] Direct extraction failed, falling back to server...", e);
+  }
+
+  // Hybrid mode: try public Piped APIs directly from browser first.
+  // This avoids hitting our backend for every playback request.
+  for (const base of CLIENT_PIPED_APIS) {
+    try {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 6000);
+      const res = await fetch(`${base}/streams/${videoId}`, { signal: controller.signal });
+      window.clearTimeout(timeout);
+      if (!res.ok) continue;
+      const data = await res.json();
+      const stream =
+        data?.audioStreams?.find((s: any) => s?.mimeType?.includes('opus') && s?.url) ||
+        data?.audioStreams?.find((s: any) => s?.mimeType?.includes('audio') && s?.url);
+      if (stream?.url) {
+        console.log('[YTMusic] Using direct browser Piped stream:', base);
+        return { url: stream.url, mimeType: stream.mimeType || 'audio/webm; codecs="opus"' };
+      }
+    } catch {
+      // try next instance
+    }
   }
 
   const res = await fetch(apiUrl(`/api/stream/${videoId}`));
