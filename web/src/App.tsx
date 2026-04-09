@@ -8,7 +8,7 @@ import DotButton from './components/DotButton'
 import PlayerControls from './components/PlayerControls'
 import Auth from './components/Auth'
 import SettingsPanel from './components/SettingsPanel'
-import { getRecommendations, getYTInstance, getHistory, getLibrary, getPlaylists, search } from './services/ytmusic'
+import { getRecommendations, getHistory, getLibrary, getPlaylists, search } from './services/ytmusic'
 import type { Track } from './services/ytmusic'
 import { getHistory as getLocalRecent } from './services/history'
 
@@ -34,7 +34,6 @@ function AppContent() {
   const fetchData = useCallback(async (v: typeof view, q?: string) => {
     setLoading(true)
     try {
-      await getYTInstance(credentials);
       let data: Track[] = [];
       if (v === 'home') data = await getRecommendations();
       else if (v === 'history') data = await getHistory();

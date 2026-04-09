@@ -2,6 +2,7 @@ import { Innertube } from 'youtubei.js';
 import { apiUrl } from '../config';
 
 let yt: Innertube | null = null;
+const HAS_REMOTE_API = !!(import.meta.env.VITE_API_BASE_URL as string | undefined);
 const CLIENT_PIPED_APIS = [
   'https://pipedapi.kavin.rocks',
   'https://pipedapi-libre.kavin.rocks',
@@ -142,6 +143,8 @@ export const getRecommendations = async () => {
     console.warn('[YTMusic] Piped recommendations unavailable, falling back to YT feed.');
   }
 
+  if (HAS_REMOTE_API) return [];
+
   try {
     const instance = await getYTInstance();
     const music = instance.music;
@@ -167,6 +170,15 @@ export const getRecommendations = async () => {
 };
 
 export const getHistory = async () => {
+  if (HAS_REMOTE_API) {
+    try {
+      const res = await fetch(apiUrl('/api/history'));
+      if (res.ok) return await res.json();
+      return [];
+    } catch {
+      return [];
+    }
+  }
   try {
     const instance = await getYTInstance();
     // YouTube Music history is often just the main history
@@ -180,6 +192,15 @@ export const getHistory = async () => {
 };
 
 export const getLibrary = async () => {
+  if (HAS_REMOTE_API) {
+    try {
+      const res = await fetch(apiUrl('/api/library'));
+      if (res.ok) return await res.json();
+      return [];
+    } catch {
+      return [];
+    }
+  }
   try {
     const instance = await getYTInstance();
     const library = await instance.music.getLibrary();
@@ -205,6 +226,15 @@ export const getLibrary = async () => {
 };
 
 export const getPlaylists = async () => {
+  if (HAS_REMOTE_API) {
+    try {
+      const res = await fetch(apiUrl('/api/playlists'));
+      if (res.ok) return await res.json();
+      return [];
+    } catch {
+      return [];
+    }
+  }
   try {
     const instance = await getYTInstance();
     const playlists = await instance.music.getLibrary(); // Often library contains playlists
@@ -310,6 +340,8 @@ export const search = async (query: string) => {
   } catch {
     console.warn('[YTMusic] Piped search unavailable, falling back to YT search.');
   }
+
+  if (HAS_REMOTE_API) return [];
 
   try {
     const instance = await getYTInstance();

@@ -536,6 +536,74 @@ app.get('/api/home', async (req, res) => {
   }
 });
 
+app.get('/api/history', async (_req, res) => {
+  try {
+    const instance = await getYT();
+    const history = await instance.getHistory();
+    const items = ((history as any).contents || []) as any[];
+    const tracks = items.map(item => {
+      const id = item.video_id || item.videoId || item.endpoint?.payload?.videoId || item.id;
+      const title = item.title ? item.title.toString() : 'Unknown';
+      let artist = 'Unknown';
+      if (item.artists?.[0]?.name) artist = item.artists[0].name;
+      const thumb = item.thumbnails?.[0]?.url || item.thumbnail?.url || '';
+      return { id, title, artist, thumbnail: thumb };
+    }).filter(t => t.id && typeof t.id === 'string' && t.id.length === 11);
+    res.json(tracks);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/library', async (_req, res) => {
+  try {
+    const instance = await getYT();
+    const library = await instance.music.getLibrary();
+    const sections = ((library as any).sections || (library as any).contents || []) as any[];
+    const allItems: any[] = [];
+    for (const section of sections) {
+      const items = (section as any).contents || (section as any).items || [];
+      if (Array.isArray(items)) allItems.push(...items);
+      else if (typeof section === 'object' && section !== null) allItems.push(section);
+    }
+    const tracks = allItems.map(item => {
+      const id = item.video_id || item.videoId || item.endpoint?.payload?.videoId || item.id;
+      const title = item.title ? item.title.toString() : 'Unknown';
+      let artist = 'Unknown';
+      if (item.artists?.[0]?.name) artist = item.artists[0].name;
+      const thumb = item.thumbnails?.[0]?.url || item.thumbnail?.url || '';
+      return { id, title, artist, thumbnail: thumb };
+    }).filter(t => t.id && typeof t.id === 'string' && t.id.length === 11);
+    res.json(tracks);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/playlists', async (_req, res) => {
+  try {
+    const instance = await getYT();
+    const library = await instance.music.getLibrary();
+    const sections = ((library as any).sections || (library as any).contents || []) as any[];
+    const rows: any[] = [];
+    for (const section of sections) {
+      const items = (section as any).contents || (section as any).items || [];
+      if (Array.isArray(items)) rows.push(...items);
+    }
+    const tracks = rows
+      .filter(item => item.type === 'MusicTwoRowItem' && item.item_type === 'playlist')
+      .map(item => ({
+        id: item.id || item.endpoint?.payload?.browseId,
+        title: item.title?.toString() || 'Untitled Playlist',
+        artist: item.subtitle?.toString() || 'Playlist',
+        thumbnail: item.thumbnail?.url || item.thumbnails?.[0]?.url || ''
+      }));
+    res.json(tracks);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get('/api/piped/home', async (_req, res) => {
   try {
     const trending = await fetchPipedJson('/trending?region=US') || await fetchPipedJson('/popular');
