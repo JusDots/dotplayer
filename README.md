@@ -27,23 +27,28 @@ Runs:
 
 Recommended setup:
 - Frontend: **GitHub Pages**
-- Backend API (`web/server.ts`): **Render**
+- Backend API (`web/server.ts`): **Firebase Functions**
 
-### 1) Deploy backend API on Render
+### 1) Deploy backend API on Firebase Functions
 
-This repo includes `render.yaml` with service config.
+```bash
+npm i -g firebase-tools
+firebase login
+cd functions
+npm install
+cd ..
+firebase deploy --only functions
+```
 
-- In Render, create a **Blueprint** (or new Web Service) from this repo.
-- Service root: `web`
-- Start command: `npm run start:server`
-- Copy deployed URL, e.g. `https://dotplayer-api.onrender.com`
+Copy function URL from output:
+- `https://<region>-<project>.cloudfunctions.net/api`
 
 ### 2) Set frontend API URL for Pages
 
 In GitHub repo settings:
 - `Settings -> Secrets and variables -> Actions -> Variables`
 - Add variable:
-  - `VITE_API_BASE_URL` = your Render API URL
+  - `VITE_API_BASE_URL` = your Firebase function URL (value can end in `/api`)
 
 ### 3) Enable GitHub Pages
 
