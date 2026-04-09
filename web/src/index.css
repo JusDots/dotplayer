@@ -1,0 +1,44 @@
+:root {
+  --font-primary: 'Poppins', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  
+  --bg-color: #0c0c0c;
+  --text-color: #ffffff;
+  --accent-color: #00ffcc;
+  --dot-color: #333333;
+  --ui-scale: 100%;
+  --anim-speed: 0.2s;
+  --card-radius: 4px;
+  --player-padding-bottom: 40px;
+  --nav-bottom-offset: 120px;
+  --panel-blur: 10px;
+  --dot-grid-size: 20px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: calc(16px * (var(--ui-scale) / 100%));
+}
+
+code {
+  font-family: var(--font-mono);
+}
+
+.dot-grid {
+  background-image: radial-gradient(var(--dot-color) 1px, transparent 1px);
+  background-size: var(--dot-grid-size) var(--dot-grid-size);
+}
+
+* {
+  transition-duration: var(--anim-speed);
+}
+
+input[type='range'] {
+  accent-color: var(--accent-color);
+}

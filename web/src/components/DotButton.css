@@ -1,0 +1,55 @@
+.dot-button {
+  background: transparent;
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+  padding: 0;
+  color: var(--accent-color);
+}
+
+.dot-button::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border: 1px dashed var(--dot-color);
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.dot-button:hover {
+  background: var(--accent-color);
+  color: var(--bg-color);
+  box-shadow: 0 0 15px var(--accent-color);
+}
+
+.dot-button.active {
+  background: var(--accent-color);
+  color: var(--bg-color);
+}
+
+.dot-button-inner {
+  font-family: var(--font-mono);
+  font-weight: bold;
+}
+
+.dot-button.pill {
+  border-radius: 999px;
+  width: auto;
+  min-height: 42px;
+  height: 42px;
+  padding: 0 14px;
+}
+
+.dot-button.pill::before {
+  border-radius: 999px;
+}
