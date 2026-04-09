@@ -1,4 +1,5 @@
 import { Innertube } from 'youtubei.js';
+import { apiUrl } from '../config';
 
 let yt: Innertube | null = null;
 
@@ -123,7 +124,7 @@ const mapTracks = (items: any[]): Track[] => {
 
 export const getRecommendations = async () => {
   try {
-    const piped = await fetch('/api/piped/home');
+    const piped = await fetch(apiUrl('/api/piped/home'));
     if (piped.ok) {
       const data = await piped.json();
       if (Array.isArray(data) && data.length) {
@@ -260,7 +261,7 @@ export const getStreamUrl = async (videoId: string): Promise<{ url: string; mime
      console.warn("[YTMusic] Direct extraction failed, falling back to server...", e);
   }
 
-  const res = await fetch(`/api/stream/${videoId}`);
+  const res = await fetch(apiUrl(`/api/stream/${videoId}`));
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: 'Unknown error' }));
     throw new Error(err.error || `Server returned ${res.status}`);
@@ -270,7 +271,7 @@ export const getStreamUrl = async (videoId: string): Promise<{ url: string; mime
 
 export const search = async (query: string) => {
   try {
-    const piped = await fetch(`/api/piped/search?q=${encodeURIComponent(query)}`);
+    const piped = await fetch(apiUrl(`/api/piped/search?q=${encodeURIComponent(query)}`));
     if (piped.ok) {
       const data = await piped.json();
       if (Array.isArray(data)) {

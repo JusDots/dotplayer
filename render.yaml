@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: dotplayer-api
+    runtime: node
+    rootDir: web
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run start:server
+    envVars:
+      - key: NODE_VERSION
+        value: 20

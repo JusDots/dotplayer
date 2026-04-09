@@ -23,6 +23,36 @@ Runs:
 - Vite app at `http://localhost:5173`
 - API/stream server at `http://localhost:3001`
 
+## Production Hosting (No local dev needed)
+
+Recommended setup:
+- Frontend: **GitHub Pages**
+- Backend API (`web/server.ts`): **Render**
+
+### 1) Deploy backend API on Render
+
+This repo includes `render.yaml` with service config.
+
+- In Render, create a **Blueprint** (or new Web Service) from this repo.
+- Service root: `web`
+- Start command: `npm run start:server`
+- Copy deployed URL, e.g. `https://dotplayer-api.onrender.com`
+
+### 2) Set frontend API URL for Pages
+
+In GitHub repo settings:
+- `Settings -> Secrets and variables -> Actions -> Variables`
+- Add variable:
+  - `VITE_API_BASE_URL` = your Render API URL
+
+### 3) Enable GitHub Pages
+
+- `Settings -> Pages`
+- Source: **GitHub Actions**
+- Workflow `Deploy Web To GitHub Pages` will auto-deploy on push.
+- Site URL will be:
+  - `https://jusdots.github.io/dotplayer/`
+
 ## Discord Rich Presence (Optional)
 
 ```bash
