@@ -73,6 +73,10 @@ const Auth: React.FC<AuthProps> = ({ onLogin }) => {
           localStorage.removeItem('yt_credentials');
         }
       })();
+    } else {
+      // Default to Guest mode so the app loads immediately on first visit.
+      // Users can still explicitly log in for personalized data.
+      handleBypass();
     }
   }, [onLogin]);
 
