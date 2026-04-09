@@ -4,6 +4,17 @@ import { apiUrl } from '../config';
 let yt: Innertube | null = null;
 // In production we rely on backend API routes for reliability.
 const HAS_REMOTE_API = true;
+
+if (typeof window !== 'undefined' && import.meta.env.PROD && !apiUrl('').startsWith('http')) {
+  console.warn(
+    '%c[DotPlayer] WARNING: No VITE_API_BASE_URL detected in production!',
+    'color: red; font-size: 14px; font-weight: bold;'
+  );
+  console.warn(
+    'GitHub Pages is a static host and cannot run the DotPlayer backend. ' +
+    'Please set VITE_API_BASE_URL to your working Vercel URL in your GitHub Repository Variables.'
+  );
+}
 const CLIENT_PIPED_APIS = [
   'https://pipedapi.kavin.rocks',
   'https://pipedapi-libre.kavin.rocks',
