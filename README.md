@@ -1,78 +1,51 @@
-# DotPlayer
+# DotPlayer — v1.0 “BututhDevice”
 
-A modern YouTube Music-style player with:
-- Android app code (`android/`)
-- Web app (`web/`) with multi-source stream fallback
-- Rich playback controls, keybinds, theming, and settings
+DotPlayer is a fast, modern music player for the web, inspired by YouTube Music.
 
-## Repository Structure
+**Open the website:** https://dotplayer.vercel.app
 
-- `android/` — Android app (Kotlin/Gradle)
-- `web/` — React + Vite web app + Node stream server
-- `web/discord-companion/` — local Discord Rich Presence companion
+---
 
-## Web Quick Start
+## What it does
 
-```bash
-cd web
-npm install
-npm run dev
-```
+- Plays music with a clean, minimal interface
+- Uses a queue with **Next / Previous**
+- Works great with keyboard shortcuts
+- Includes a full **Settings** menu to customize the UI (themes, colors, blur, radius, sizing, keybinds)
+- Can optionally show what you’re playing on **Discord Rich Presence** (with a companion app)
 
-Runs:
-- Vite app at `http://localhost:5173`
-- API/stream server at `http://localhost:3001`
+---
 
-## Production Hosting (No local dev needed)
+## How to use
 
-Recommended setup (free + reliable):
-- Frontend + Backend: **Vercel** (single deployment)
+1. Open: https://dotplayer.vercel.app  
+2. Pick a track (Recommended / Search)  
+3. Press play and enjoy
 
-### 1) Deploy full web app on Vercel
+---
 
-```bash
-cd web
-npm i -g vercel
-npm install
-vercel --prod
-```
+## Keyboard shortcuts (default)
 
-Copy site URL from output, for example:
-- `https://dotplayer-api.vercel.app`
+- **H**: Recommended
+- **R**: Recent
+- **T**: History
+- **P**: Playlists
+- **L**: Library
+- **Space**: Play / Pause
+- **← / →**: Previous / Next
+- **,**: Settings
 
-API and frontend are served from the same domain:
-- `https://dotplayer-api.vercel.app/`
-- `https://dotplayer-api.vercel.app/api/home`
+(You can change these in Settings.)
 
-## Discord Rich Presence (Optional)
-
-```bash
-cd web/discord-companion
-npm install
-# PowerShell:
-$env:DISCORD_CLIENT_ID="your_discord_app_client_id"
-npm start
-```
-
-Then play music in the web app; it will post now-playing updates to the companion.
-
-## Settings Highlights
-
-- Theme presets: Default, Night, Nord, Light
-- Custom theme override mode
-- Color controls (accent, background, text, dot grid)
-- Keybind customization
-- UI sliders (scale, radius, offsets, blur, grid size)
-
-## Build
-
-```bash
-cd web
-npm run build
-```
+---
 
 ## Notes
 
-- Public stream instances can be unstable; playback includes fallback + retry behavior.
-- Keep local `.env`/secrets out of git.
-- Free-tier path: deploy on Vercel only (no Firebase Functions/Blaze required).
+- Some songs may take a few seconds to start because DotPlayer finds the best available stream source.
+- Some browsers require one click before they allow audio to play.
+
+---
+
+## Version
+
+**v1.0 “BututhDevice”**
