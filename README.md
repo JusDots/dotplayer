@@ -25,11 +25,10 @@ Runs:
 
 ## Production Hosting (No local dev needed)
 
-Recommended setup:
-- Frontend: **Firebase Hosting**
-- Backend API (`web/server.ts`): **Vercel**
+Recommended setup (free + reliable):
+- Frontend + Backend: **Vercel** (single deployment)
 
-### 1) Deploy backend API on Vercel
+### 1) Deploy full web app on Vercel
 
 ```bash
 cd web
@@ -38,27 +37,12 @@ npm install
 vercel --prod
 ```
 
-Copy backend URL from output, for example:
+Copy site URL from output, for example:
 - `https://dotplayer-api.vercel.app`
 
-### 2) Build frontend with backend URL
-
-```bash
-cd web
-# PowerShell:
-$env:VITE_API_BASE_URL="https://dotplayer-api.vercel.app"
-npm run build
-cd ..
-```
-
-### 3) Deploy frontend on Firebase Hosting
-
-```bash
-firebase deploy --only hosting
-```
-
-Site URL will be:
-- `https://dotplayer-api.web.app` (or your project hosting URL)
+API and frontend are served from the same domain:
+- `https://dotplayer-api.vercel.app/`
+- `https://dotplayer-api.vercel.app/api/home`
 
 ## Discord Rich Presence (Optional)
 
@@ -91,3 +75,4 @@ npm run build
 
 - Public stream instances can be unstable; playback includes fallback + retry behavior.
 - Keep local `.env`/secrets out of git.
+- Free-tier path: deploy on Vercel only (no Firebase Functions/Blaze required).

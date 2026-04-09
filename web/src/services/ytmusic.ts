@@ -2,7 +2,8 @@ import { Innertube } from 'youtubei.js';
 import { apiUrl } from '../config';
 
 let yt: Innertube | null = null;
-const HAS_REMOTE_API = !!(import.meta.env.VITE_API_BASE_URL as string | undefined);
+// In production we rely on backend API routes for reliability.
+const HAS_REMOTE_API = true;
 const CLIENT_PIPED_APIS = [
   'https://pipedapi.kavin.rocks',
   'https://pipedapi-libre.kavin.rocks',
