@@ -1,4 +1,0 @@
-﻿[Android UA + Origin (Old Code)] Status: 200
-[No Headers] Status: 200
-[Standard Web UA] Status: 200
-[iOS App UA] Status: 200

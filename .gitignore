@@ -1,0 +1,30 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Environment / secrets
+.env
+.env.*
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Android build caches
+android/.gradle/
+android/**/build/
+
+# Web build/runtime artifacts
+web/node_modules/
+web/dist/
+web/out.txt
+web/recs-out.json
+web/test-*.txt
+
+# Misc
+*.tmp
