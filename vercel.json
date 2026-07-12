@@ -1,0 +1,15 @@
+{
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/search",
+      "destination": "/api/search"
+    },
+    {
+      "source": "/api/stream/:id",
+      "destination": "/api/stream/:id"
+    }
+  ]
+}
