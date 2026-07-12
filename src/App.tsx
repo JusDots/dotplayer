@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePlayerStore, Track } from './stores/playerStore';
 
-const API = '/api';
-
 function App() {
   const playerRef = useRef<HTMLDivElement>(null);
-  const { currentTrack, isPlaying, isLoading, queue, currentIndex, progress, playTrack, togglePlay, next, prev } = usePlayerStore();
+  const { currentTrack, isPlaying, isLoading, queue, currentIndex, playTrack, togglePlay, next, prev } = usePlayerStore();
   const [search, setSearch] = useState('');
   const [results, setResults] = useState<Track[]>([]);
   const [searching, setSearching] = useState(false);
@@ -14,8 +12,7 @@ function App() {
     if (!playerRef.current || !currentTrack) return;
 
     const videoId = currentTrack.id;
-    const playerEl = playerRef.current;
-    playerEl.innerHTML = `
+    playerRef.current.innerHTML = `
       <iframe
         id="yt-player"
         width="1"
@@ -32,16 +29,50 @@ function App() {
     e.preventDefault();
     if (!search.trim()) return;
     setSearching(true);
+
     try {
-      const res = await fetch(`${API}/search?q=${encodeURIComponent(search)}`);
-      if (!res.ok) throw new Error('Search failed');
-      const tracks = await res.json();
+      const query = encodeURIComponent(search + ' music');
+      const response = await fetch(
+        `https://www.youtube.com/results?search_query=${query}&pbj=1`,
+        { headers: { 'User-Agent': 'Mozilla/5.0' } }
+      );
+      const text = await response.text();
+
+      const videoIds = [...text.matchAll(/"videoId":"([^"]+)"/g)].map(m => m[1]);
+      const titles = [...text.matchAll(/"title":"([^"]+)"/g)].map(m => m[1]);
+      const thumbs = [...text.matchAll(/ytimg\.com\/vi\/([^"\/]+)\/hqdefault/g)].map(m => m[1]);
+      const channels = [...text.matchAll(/"longBylineText":"([^"]+)"/g)].map(m => m[1]);
+
+      const uniqueIds = [...new Set(videoIds)].slice(0, 20);
+
+      const tracks = uniqueIds.map((id, i) => ({
+        id,
+        title: decodeHTML(titles[i * 2] || 'Unknown Track'),
+        artist: decodeHTML(channels[i] || 'YouTube'),
+        thumbnail: thumbs[i] ? `https://i.ytimg.com/vi/${thumbs[i]}/hqdefault.jpg` : `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+      }));
+
       setResults(tracks);
     } catch (err) {
       console.error('Search failed:', err);
       setResults([]);
     }
+
     setSearching(false);
+  }
+
+  function decodeHTML(str: string): string {
+    if (!str) return '';
+    return str
+      .replace(/\\u0026/g, '&')
+      .replace(/\\u003c/g, '<')
+      .replace(/\\u003e/g, '>')
+      .replace(/\\"/g, '"')
+      .replace(/\\\\/g, '\\')
+      .replace(/&/g, '&')
+      .replace(/</g, '<')
+      .replace(/>/g, '>')
+      .replace(/"/g, '"');
   }
 
   return (
@@ -100,10 +131,6 @@ function App() {
                 {isLoading ? '⏳' : '▶'}
               </button>
               <button onClick={next} disabled={currentIndex >= queue.length - 1}>⏭</button>
-            </div>
-
-            <div className="progress-bar">
-              <div className="progress-fill" style={{ width: `${progress}%` }} />
             </div>
           </>
         )}
